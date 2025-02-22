@@ -31,7 +31,7 @@ class InputDialog2(QDialog):
         self.setWindowTitle("Digitação")
         self.text_edit = QTextEdit()
         self.text_edit.setPlaceholderText("Digite o Texto de Envio | <<nomeconvidado>> = Nome do Convidado | <<nomeacomphantes>> = Nome do acompanhantes")
-        self.setWindowIcon(QIcon(f'C:/Users/{usuario}/Desktop/QRsend/Pictures/Logo.png'))
+        self.setWindowIcon(QIcon(f'../Pictures/Logo.png'))
         self.submit_button = QPushButton('Pronto')
         self.submit_button.clicked.connect(self.accept)
         layout = QVBoxLayout()
@@ -56,14 +56,15 @@ def Envio_Original(Dados_Convidados_Envio):
 
     if texto_digitado:
             # Exibe uma mensagem de confirmação
-            caminho_fotoinico = f'C:/Users/{usuario}/Desktop/QRsend/Ver/inicio.png'
-            caminho_fotoerro = f'C:/Users/{usuario}/Desktop/QRsend/Ver/erro.png'
-            caminho_fotoseta = f'C:/Users/{usuario}/Desktop/QRsend/Ver/seta.png'
-            caminho_fotoplus = f'C:/Users/{usuario}/Desktop/QRsend/Ver/plus.png'
-            caminho_fotoevidioedoc = f'C:/Users/{usuario}/Desktop/QRsend/Ver/fotovidio.png'
-            caminho_fotopesquisa = f'C:/Users/{usuario}/Desktop/QRsend/Ver/pesquisa.png'
-            caminho_fotoabrir = f'C:/Users/{usuario}/Desktop/QRsend/Ver/abrir.png'
-            caminho_fotoseta2 = f'C:/Users/{usuario}/Desktop/QRsend/Ver/seta2.png'
+            caminho_fotoinico = f'../Ver/inicio.png'
+            caminho_fotoerro = f'../Ver/erro.png'
+            caminho_fotoseta = f'../Ver/seta.png'
+            caminho_fotoplus = f'../Ver/plus.png'
+            caminho_fotoevidioedoc = f'../Ver/fotovidio.png'
+            caminho_fotopesquisa = f'../Ver/pesquisa.png'
+            caminho_fotoabrir = f'../Ver/abrir.png'
+            caminho_fotoseta2 = f'../Ver/seta2.png'
+            caminho_pasta = QFileDialog.getExistingDirectory(None, "Selecione a pasta aonde se encontra os Qrs respectivos da planilha")
             #pyperclip.copy(caminho_envio)
             # Eibe uma mensagem de confirmação
             msg4 = QMessageBox()
@@ -127,10 +128,11 @@ def Envio_Original(Dados_Convidados_Envio):
 
         else:
             localizar_imagem_e_clicar(caminho_fotoseta, 0.8)
+            print("Imagem da seta")
             time.sleep(4)
             for _, row in grupo.iterrows():
-                
-                qr_code_path = f'C:/Users/{usuario}/Desktop/QRsend/QrsComFundo/qrcode_{row["ID"]}.png'
+                print("Imagem da seta deu certo")
+                qr_code_path = f'{caminho_pasta}/qrcode_{row["ID"]}.png'
                 qr_code_path = f'"{qr_code_path}"'
                 qr_code_path = qr_code_path.replace("/", "\\")
                 pyperclip.copy(qr_code_path)
@@ -163,7 +165,7 @@ def Envio_Original(Dados_Convidados_Envio):
     data_formatada = data_atual.strftime("%Y-%m-%d")
 
 # Define o caminho e o nome do arquivo com a data incluída
-    caminho_arquivo = f"C:/Users/{usuario}/Desktop/QRsend/Resultados/dadosenvio_{data_formatada}.xlsx"
+    caminho_arquivo = f"../Resultados/dadosenvio_{data_formatada}.xlsx"
 
 # Salva o arquivo Excel
     wb.save(caminho_arquivo)

@@ -23,7 +23,7 @@ from PyQt5.QtWidgets import QInputDialog, QMessageBox
 
 usuario = os.getlogin()
 
-cred = credentials.Certificate(f'C:/Users/{usuario}/Desktop/QRsend/Pk/serejo-app-firebase-adminsdk-f6b58-095116908a.json')
+cred = credentials.Certificate(f'../Pk/serejo-app-firebase-adminsdk-f6b58-095116908a.json')
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()

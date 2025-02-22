@@ -25,6 +25,7 @@ from PyQt5.QtGui import QPixmap , QDesktopServices
 from PyQt5.QtCore import QUrl
 from openpyxl.drawing.image import Image as ExcelImage
 
+caminho_foto_fundo_final =''
 
 
 def ajustar_imagem_para_celula(img, cell_width, cell_height):
@@ -78,10 +79,10 @@ def exibir_imagem(caminho_imagem):
     dialog.exec_()
 
 # Exemplo de uso da função
-def Iterar_sobre_as_imagens(PastaQrs, ImagemdeFundo):
+def Iterar_sobre_as_imagens(PastaQrs, ImagemdeFundo, PastaQrsFundo):
     # Definir o caminho da pasta onde os QR codes com fundo serão salvos
     usuario = os.getlogin()
-    pasta_qrs_com_fundo = f"C:/Users/{usuario}/Desktop/QRsend/QrsComFundo"
+    pasta_qrs_com_fundo = PastaQrsFundo
 
     # Limpar a pasta QrsComFundo antes de salvar novas imagens
     for arquivo in os.listdir(pasta_qrs_com_fundo):
@@ -130,6 +131,7 @@ def Iterar_sobre_as_imagens(PastaQrs, ImagemdeFundo):
 
 
 def Carregar_Plano_De_Fundo(usuario):
+    global caminho_pasta
     msg = QMessageBox()
     msg.setIcon(QMessageBox.Question)
     msg.setText("Você deseja atribuir uma imagem de fundo aos QrCodes gerados?")
@@ -138,7 +140,7 @@ def Carregar_Plano_De_Fundo(usuario):
     resposta = msg.exec_()
 
     if resposta == QMessageBox.Yes:
-            caminhoQrs = f"C:/Users/{usuario}/Desktop/QRsend/Qrs/"
+            caminhoQrs = f"../Qrs/"
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Information)
             msg.setWindowTitle("Procurar arquivo")
@@ -146,9 +148,10 @@ def Carregar_Plano_De_Fundo(usuario):
             msg.setStandardButtons(QMessageBox.Ok)
             msg.exec_()
             caminho_fotofundo, _ = QFileDialog.getOpenFileName(None, "Selecione o arquivo de imagem", "", "Imagens (*.png *.jpg *.jpeg *.bmp)")
-            Iterar_sobre_as_imagens(caminhoQrs,caminho_fotofundo,)
-            caminho_imagem = f"C:/Users/{usuario}/Desktop/QRsend/QrsComFundo/qrcode_1.png"
-            exibir_imagem(caminho_imagem)
+            caminho_pasta = QFileDialog.getExistingDirectory(None, "Selecione a pasta aonde deseja salvar os QR codes")
+            Iterar_sobre_as_imagens(caminhoQrs,caminho_fotofundo,caminho_pasta)
+            caminho_foto_fundo_final = f"{caminho_pasta}/qrcode_1.png"
+            exibir_imagem(caminho_foto_fundo_final)
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Question)
             msg.setText("Você deseja refazer o fundo?")
@@ -156,7 +159,7 @@ def Carregar_Plano_De_Fundo(usuario):
             msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             resposta_fundo = msg.exec_()
             while resposta_fundo == QMessageBox.Yes:
-                caminhoQrs = f"C:/Users/{usuario}/Desktop/QRsend/Qrs/"
+                caminhoQrs = f"../Qrs/"
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Information)
                 msg.setWindowTitle("Procurar arquivo")
@@ -164,8 +167,8 @@ def Carregar_Plano_De_Fundo(usuario):
                 msg.setStandardButtons(QMessageBox.Ok)
                 msg.exec_()
                 caminho_fotofundo, _ = QFileDialog.getOpenFileName(None, "Selecione o arquivo de imagem", "", "Imagens (*.png *.jpg *.jpeg *.bmp)")
-                Iterar_sobre_as_imagens(caminhoQrs,caminho_fotofundo,)
-                exibir_imagem(caminho_imagem)
+                Iterar_sobre_as_imagens(caminhoQrs,caminho_fotofundo,caminho_pasta)
+                exibir_imagem(caminho_foto_fundo_final)
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Question)
                 msg.setText("Você deseja refazer o fundo?")
@@ -173,12 +176,16 @@ def Carregar_Plano_De_Fundo(usuario):
                 msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
                 resposta_fundo = msg.exec_()
 
+            
+
 
 def criar_Planilha_Final():
     # Criar uma nova planilha do Excel
     wb = Workbook()
     ws = wb.active
     ws.title = 'Dados Convidados'
+
+ 
 
     # Definir os nomes das colunas
     ws['A1'] = 'ID'
@@ -190,7 +197,7 @@ def criar_Planilha_Final():
     ws['G1'] = 'Faixa Etaria'
     ws['H1'] = 'Idade'
 
-
+ 
     max_rows = 2000 
     max_columns = 6 
 
@@ -210,7 +217,7 @@ def criar_Planilha_Final():
 
 def insere_Planilha_Final(Dados_Convidados , ws , wb):
     usuario = os.getlogin()
-    pasta_qrs = f"C:/Users/{usuario}/Desktop/QRsend/Qrs"
+    pasta_qrs = f"../Qrs"
 
     for arquivo in os.listdir(pasta_qrs):
         caminho_arquivo = os.path.join(pasta_qrs, arquivo)
@@ -278,7 +285,7 @@ def insere_Planilha_Final(Dados_Convidados , ws , wb):
         draw.text(text_position, valorNomeQrCode, font=font, fill="black")
     
         usuario = os.getlogin()
-        qr_image_path = f"C:/Users/{usuario}/Desktop/QRsend/Qrs/qrcode_{data['ID']}.png"
+        qr_image_path = f"../Qrs/qrcode_{data['ID']}.png"
     
         os.makedirs(os.path.dirname(qr_image_path), exist_ok=True)
     
@@ -347,7 +354,7 @@ def insere_Planilha_Final(Dados_Convidados , ws , wb):
 
             }
             
-            qr_image_path2 = f"C:/Users/{usuario}/Desktop/QRsend/QrsComFundo/qrcode_{data['ID']}.png"
+            qr_image_path2 = f"{caminho_pasta}/qrcode_{data['ID']}.png"
             text_img = ExcelImage(qr_image_path2)
 
 # Defina a largura e altura desejadas (em pixels) que correspondem ao tamanho da célula

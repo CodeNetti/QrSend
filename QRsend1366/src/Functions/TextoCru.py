@@ -36,7 +36,7 @@ class InputDialog(QDialog):
         self.setWindowTitle("Digitação")
         self.text_edit = QTextEdit()
         self.text_edit.setPlaceholderText("Digite o Texto de Envio")
-        self.setWindowIcon(QIcon(f'C:/Users/{usuario}/Desktop/QRsend/Pictures/Logo.png'))
+        self.setWindowIcon(QIcon(f'../Pictures/Logo.png'))
         self.submit_button = QPushButton('Pronto')
         self.submit_button.clicked.connect(self.accept)
         layout = QVBoxLayout()
@@ -54,7 +54,7 @@ class InputDialog2(QDialog):
         self.setWindowTitle("Digitação")
         self.text_edit = QTextEdit()
         self.text_edit.setPlaceholderText("Digite o Texto de Envio | <<nomeconvidado>> = Nome do Convidado | <<nomeacomphantes>> = Nome do acompanhantes")
-        self.setWindowIcon(QIcon(f'C:/Users/{usuario}/Desktop/QRsend/Pictures/Logo.png'))
+        self.setWindowIcon(QIcon(f'../Pictures/Logo.png'))
         self.submit_button = QPushButton('Pronto')
         self.submit_button.clicked.connect(self.accept)
         layout = QVBoxLayout()
@@ -68,9 +68,9 @@ class InputDialog2(QDialog):
 # Função principal
 def Envio_Original_Texto(Dados_Convidados_Envio):
 
-    caminho_fotoinico = f'C:/Users/{usuario}/Desktop/QRsend/Ver/inicio.png'
-    caminho_fotoerro = f'C:/Users/{usuario}/Desktop/QRsend/Ver/erro.png'
-    caminho_fotoseta = f'C:/Users/{usuario}/Desktop/QRsend/Ver/seta.png'
+    caminho_fotoinico = f'../Ver/inicio.png'
+    caminho_fotoerro = f'../Ver/erro.png'
+    caminho_fotoseta = f'../Ver/seta.png'
 
     
 
@@ -246,7 +246,7 @@ def Envio_Original_Texto(Dados_Convidados_Envio):
     data_formatada = data_atual.strftime("%Y-%m-%d")
 
 # Define o caminho e o nome do arquivo com a data incluída
-    caminho_arquivo = f"C:/Users/{usuario}/Desktop/QRsend/Resultados/dadosenvio_{data_formatada}.xlsx"
+    caminho_arquivo = f"../Resultados/dadosenvio_{data_formatada}.xlsx"
 
 # Salva o arquivo Excel
     wb.save(caminho_arquivo)

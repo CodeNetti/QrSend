@@ -51,7 +51,7 @@ def mostrar_opcoes():
 
     msg3.exec_()
     if msg3.clickedButton() == btn_imagens:
-            caminho_operacao = f'C:/Users/{usuario}/Desktop/QRsend/Ver/fotovidio.png'
+            caminho_operacao = f'../Ver/fotovidio.png'
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Information)
             msg.setWindowTitle("Procurar arquivo")
@@ -63,7 +63,7 @@ def mostrar_opcoes():
             caminho_envio = caminho_envio.replace("/", "\\")
 
     elif msg3.clickedButton() == btn_videos:
-        caminho_operacao = f'C:/Users/{usuario}/Desktop/QRsend/Ver/fotovidio.png'
+        caminho_operacao = f'../Ver/fotovidio.png'
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
         msg.setWindowTitle("Procurar arquivo")
@@ -101,7 +101,7 @@ def mostrar_opcoes():
                     tamanho = True
 
     elif msg3.clickedButton() == btn_documentos:
-            caminho_operacao = f'C:/Users/{usuario}/Desktop/QRsend/Ver/documentos.png'
+            caminho_operacao = f'../Ver/documentos.png'
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Information)
             msg.setWindowTitle("Procurar arquivo")
@@ -129,7 +129,7 @@ class InputDialog(QDialog):
         self.setWindowTitle("Digitação")
         self.text_edit = QTextEdit()
         self.text_edit.setPlaceholderText("Digite o Texto de Envio")
-        self.setWindowIcon(QIcon(f'C:/Users/{usuario}/Desktop/QRsend/Pictures/Logo.png'))
+        self.setWindowIcon(QIcon(f'../Pictures/Logo.png'))
         self.submit_button = QPushButton('Pronto')
         self.submit_button.clicked.connect(self.accept)
         layout = QVBoxLayout()
@@ -147,7 +147,7 @@ class InputDialog2(QDialog):
         self.setWindowTitle("Digitação")
         self.text_edit = QTextEdit()
         self.text_edit.setPlaceholderText("Digite o Texto de Envio | <<nomeconvidado>> = Nome do Convidado | <<nomeacomphantes>> = Nome do acompanhantes")
-        self.setWindowIcon(QIcon(f'C:/Users/{usuario}/Desktop/QRsend/Pictures/Logo.png'))
+        self.setWindowIcon(QIcon(f'../Pictures/Logo.png'))
         self.submit_button = QPushButton('Pronto')
         self.submit_button.clicked.connect(self.accept)
         layout = QVBoxLayout()
@@ -183,14 +183,14 @@ def Envio_Original_Texto2(Dados_Convidados_Envio):
         if texto_digitado:
                 
                 mostrar_opcoes()
-                caminho_fotoinico = f'C:/Users/{usuario}/Desktop/QRsend/Ver/inicio.png'
-                caminho_fotoerro = f'C:/Users/{usuario}/Desktop/QRsend/Ver/erro.png'
-                caminho_fotoseta = f'C:/Users/{usuario}/Desktop/QRsend/Ver/seta.png'
-                caminho_fotoplus = f'C:/Users/{usuario}/Desktop/QRsend/Ver/plus.png'
+                caminho_fotoinico = f'../Ver/inicio.png'
+                caminho_fotoerro = f'../Ver/erro.png'
+                caminho_fotoseta = f'../Ver/seta.png'
+                caminho_fotoplus = f'../Ver/plus.png'
                 caminho_fotoevidioedoc = caminho_operacao
-                caminho_fotopesquisa = f'C:/Users/{usuario}/Desktop/QRsend/Ver/pesquisa.png'
-                caminho_fotoabrir = f'C:/Users/{usuario}/Desktop/QRsend/Ver/abrir.png'
-                caminho_fotoseta2 = f'C:/Users/{usuario}/Desktop/QRsend/Ver/seta2.png'
+                caminho_fotopesquisa = f'../Ver/pesquisa.png'
+                caminho_fotoabrir = f'../Ver/abrir.png'
+                caminho_fotoseta2 = f'../Ver/seta2.png'
                 pyperclip.copy(caminho_envio)
 
             # Exibe uma mensagem de confirmação
@@ -278,14 +278,14 @@ def Envio_Original_Texto2(Dados_Convidados_Envio):
         if texto_digitado:
             # Exibe uma mensagem de confirmação
                 mostrar_opcoes()
-                caminho_fotoinico = f'C:/Users/{usuario}/Desktop/QRsend/Ver/inicio.png'
-                caminho_fotoerro = f'C:/Users/{usuario}/Desktop/QRsend/Ver/erro.png'
-                caminho_fotoseta = f'C:/Users/{usuario}/Desktop/QRsend/Ver/seta.png'
-                caminho_fotoplus = f'C:/Users/{usuario}/Desktop/QRsend/Ver/plus.png'
+                caminho_fotoinico = f'../Ver/inicio.png'
+                caminho_fotoerro = f'../Ver/erro.png'
+                caminho_fotoseta = f'../Ver/seta.png'
+                caminho_fotoplus = f'../Ver/plus.png'
                 caminho_fotoevidioedoc = caminho_operacao
-                caminho_fotopesquisa = f'C:/Users/{usuario}/Desktop/QRsend/Ver/pesquisa.png'
-                caminho_fotoabrir = f'C:/Users/{usuario}/Desktop/QRsend/Ver/abrir.png'
-                caminho_fotoseta2 = f'C:/Users/{usuario}/Desktop/QRsend/Ver/seta2.png'
+                caminho_fotopesquisa = f'../Ver/pesquisa.png'
+                caminho_fotoabrir = f'../Ver/abrir.png'
+                caminho_fotoseta2 = f'../Ver/seta2.png'
                 pyperclip.copy(caminho_envio)
 
             # Exibe uma mensagem de confirmação
@@ -382,7 +382,7 @@ def Envio_Original_Texto2(Dados_Convidados_Envio):
     data_formatada = data_atual.strftime("%Y-%m-%d")
 
 # Define o caminho e o nome do arquivo com a data incluída
-    caminho_arquivo = f"C:/Users/{usuario}/Desktop/QRsend/Resultados/dadosenvio_{data_formatada}.xlsx"
+    caminho_arquivo = f"../Resultados/dadosenvio_{data_formatada}.xlsx"
 
     print(planilha)
     wb.save(caminho_arquivo)
