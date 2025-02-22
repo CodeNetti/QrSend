@@ -2,7 +2,7 @@ import sys
 import pandas as pd
 from openpyxl import Workbook
 from openpyxl.drawing.image import Image
-from PIL import Image as PILImage  # Para manipulação da imagem
+from PIL import Image as PILImage  
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
@@ -40,10 +40,10 @@ class Janela(QMainWindow):
         self.setGeometry(0, 0, 1200, 700)
         self.setStyleSheet("background-color: #222222; color: white;")
 
-        # Centraliza a janela na tela
+        # Centralizo a janela na tela
         self.center()
 
-        # Configura a interface inicial
+        # Configuro a interface inicial
         self.initUI()
 
     def center(self):
@@ -53,7 +53,7 @@ class Janela(QMainWindow):
         self.move(qr.topLeft())
 
     def initUI(self):
-        # Adiciona o logo no centro superior
+        # Adicionao o logo no centro superior
         self.logo = QLabel(self)
         self.logo.setPixmap(QPixmap(f'C:/Users/{usuario}/Desktop/QRsend/Pictures/Logo2.png'))
         self.logo.setScaledContents(True)
@@ -103,8 +103,8 @@ class Janela(QMainWindow):
         button = QPushButton(text, self)
         button.move(350, 500)
         button.resize(130, 130)
-        button.setIcon(QIcon(f"C:/Users/{usuario}/Desktop/QRsend/Pictures/phone.png"))  # Adiciona a imagem como ícone
-        button.setIconSize(button.size())  # Ajusta o ícone ao tamanho do botão  # Adiciona a imagem como ícone
+        button.setIcon(QIcon(f"C:/Users/{usuario}/Desktop/QRsend/Pictures/phone.png"))  
+        button.setIconSize(button.size())  
         button.setStyleSheet('''
             QPushButton {
                 background-color: #363636;
@@ -127,8 +127,8 @@ class Janela(QMainWindow):
         
     def addButton2(self, text, x, y, func):
 
-        label = QLabel("WhatsApp", self)  # Texto descritivo do botão
-        label.move(720, 450)  # Ajuste a posição acima do botão
+        label = QLabel("WhatsApp", self)  
+        label.move(720, 450)  
         label.setStyleSheet('''
             QLabel {
                 color: white;
@@ -137,13 +137,13 @@ class Janela(QMainWindow):
                 text-align: center;
             }
         ''')
-          # Ajusta manualmente o tamanho do QLabel
+         
 
         button = QPushButton(text, self)
         button.move(700, 500)
         button.resize(130, 130)
         button.setIcon(QIcon(f"C:/Users/{usuario}/Desktop/QRsend/Pictures/zap.png"))
-        button.setIconSize(button.size())  # Ajusta o ícone ao tamanho do botão  # Adiciona a imagem como ícone
+        button.setIconSize(button.size()) 
         button.setStyleSheet('''
             QPushButton {
                 background-color: #363636;
@@ -187,26 +187,26 @@ class Interface1(QMainWindow):
         self.centralWidget = QWidget(self)
         self.setCentralWidget(self.centralWidget)
         
-        # Layout vertical para centralizar os botões
+        
         layout = QVBoxLayout()
-        layout.addStretch()  # Espaço flexível acima dos botões
+        layout.addStretch()  
         self.logo = QLabel(self)
         self.logo.setPixmap(QPixmap(f'C:/Users/{usuario}/Desktop/QRsend/Pictures/Logo2.png'))
         self.logo.setScaledContents(True)
         self.logo.resize(200, 200)
-        layout.addWidget(self.logo, alignment=Qt.AlignHCenter)  # Centraliza o logo horizontalmente
-        layout.addStretch()  # Espaço flexível abaixo dos botões
+        layout.addWidget(self.logo, alignment=Qt.AlignHCenter)  
+        layout.addStretch() 
 
         self.addButton("Gerar QRs", layout, Gerador_Planilha_Qr_lista_original)
         self.addButton("Criar evento", layout, CriacaodeEventos)
         self.addButton("Realizar envio com os nossos QRs", layout, Disparo_Qrs_Serejo)
         
-        layout.addStretch()  # Espaço flexível abaixo dos botões
+        layout.addStretch()  
         self.centralWidget.setLayout(layout)
 
     def addButton(self, text, layout, func):
         button = QPushButton(text, self)
-        button.setFixedSize(320, 100)  # Define um tamanho fixo para manter os botões consistentes
+        button.setFixedSize(320, 100)  
         button.setStyleSheet('''
             QPushButton {
                 background-color: #ffffff;
@@ -226,7 +226,7 @@ class Interface1(QMainWindow):
             }
         ''')
         button.clicked.connect(func)
-        layout.addWidget(button, alignment=Qt.AlignHCenter)  # Centraliza horizontalmente o botão
+        layout.addWidget(button, alignment=Qt.AlignHCenter)  
 
 
 class Interface2(QMainWindow):
@@ -240,26 +240,26 @@ class Interface2(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        # Widget central e layout vertical
+      
         self.centralWidget = QWidget(self)
         self.setCentralWidget(self.centralWidget)
         layout = QVBoxLayout()
-        layout.addStretch()  # Espaço flexível antes do logo
+        layout.addStretch() 
 
-        # Logo centralizado
+ 
         self.logo = QLabel(self)
         self.logo.setPixmap(QPixmap(f'C:/Users/{usuario}/Desktop/QRsend/Pictures/Logo2.png'))
         self.logo.setScaledContents(True)
         self.logo.setFixedSize(200, 200)
         layout.addWidget(self.logo, alignment=Qt.AlignHCenter)
 
-        layout.addStretch()  # Espaço flexível entre o logo e os botões
+        layout.addStretch() 
 
-        # Botões centralizados
+        
         self.addButton("Envio de Textos", layout, Disparo_Texto_Serejo)
         self.addButton("Envio de Textos\nDocumentos e Imagens", layout, Disparo_Texto_Serejo2)
 
-        layout.addStretch()  # Espaço flexível após os botões
+        layout.addStretch() 
         self.centralWidget.setLayout(layout)
 
     def addButton(self, text, layout, func):
