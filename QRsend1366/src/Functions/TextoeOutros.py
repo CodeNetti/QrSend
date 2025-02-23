@@ -35,22 +35,26 @@ usuario = os.getlogin()
 
 
 def mostrar_opcoes():
-    global caminho_envio  
+    global caminho_envio
+ 
     global caminho_operacao 
     msg3 = QMessageBox()
     msg3.setIcon(QMessageBox.Question)
     msg3.setWindowTitle("Confirmação")
-    msg3.setText("Maravilha!\nVocê deseja encaminhar algum documento após o texto?")
-
-    # Adiciona botões personalizados
-    btn_imagens = msg3.addButton("Imagem", QMessageBox.ActionRole)
-    btn_videos = msg3.addButton("Vídeos", QMessageBox.ActionRole)
-    btn_documentos = msg3.addButton("Documentos", QMessageBox.ActionRole)
-    btn_nao = msg3.addButton("Não", QMessageBox.ActionRole)
-    btn_cancelar = msg3.addButton("Cancelar", QMessageBox.RejectRole)
-
+    msg3.setText("Maravilha!\nVocê deseja encaminhar algum documento após o texto ou acoplar o texto ao documento em uma unica mensagem?")
+    btn_acoplado = msg3.addButton("Acoplar Texto", QMessageBox.ActionRole)
+    btn_separar = msg3.addButton("Texto Desacoplado", QMessageBox.ActionRole)
     msg3.exec_()
-    if msg3.clickedButton() == btn_imagens:
+    if msg3.clickedButton() == btn_separar:
+        msg4 = QMessageBox()
+        msg4.setIcon(QMessageBox.Question)
+        msg4.setWindowTitle("Confirmação")
+        msg4.setText("Qual o tipo de documento que deseja encaminhar")   
+        btn_imagens = msg4.addButton("Imagem", QMessageBox.ActionRole)
+        btn_videos = msg4.addButton("Vídeo", QMessageBox.ActionRole)
+        btn_documentos = msg4.addButton("Documento", QMessageBox.ActionRole)
+        msg4.exec_()
+        if msg4.clickedButton() == btn_imagens:
             caminho_operacao = f'../Ver/fotovidio.png'
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Information)
@@ -62,45 +66,45 @@ def mostrar_opcoes():
             caminho_envio = f'"{caminho_envio}"'
             caminho_envio = caminho_envio.replace("/", "\\")
 
-    elif msg3.clickedButton() == btn_videos:
-        caminho_operacao = f'../Ver/fotovidio.png'
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Information)
-        msg.setWindowTitle("Procurar arquivo")
-        msg.setText("Escolha um vídeo")
-        msg.setStandardButtons(QMessageBox.Ok)
-        msg.exec_()
-        caminho_envio, _ = QFileDialog.getOpenFileName(None, "Selecione o arquivo de vídeo", "", "Vídeos (*.mp4 *.avi *.mkv *.mov *.wmv)")
+        elif msg4.clickedButton() == btn_videos:
+            caminho_operacao = f'../Ver/fotovidio.png'
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Information)
+            msg.setWindowTitle("Procurar arquivo")
+            msg.setText("Escolha um vídeo")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec_()
+            caminho_envio, _ = QFileDialog.getOpenFileName(None, "Selecione o arquivo de vídeo", "", "Vídeos (*.mp4)")
 
-        if caminho_envio:  # Verifica se um arquivo foi selecionado
-            tamanho = False
-            while not tamanho:
-                # Remove aspas antes de calcular o tamanho
-                caminho_envio_sem_aspas = caminho_envio.strip('"')
-                
-                # Obtém o tamanho do arquivo
-                tamanho_em_bytes = os.path.getsize(caminho_envio_sem_aspas)
-                tamanho_em_mb = tamanho_em_bytes / (1024 * 1024)  # Converte para MB
+            if caminho_envio:  # Verifica se um arquivo foi selecionado
+                tamanho = False
+                while not tamanho:
+                    # Remove aspas antes de calcular o tamanho
+                    caminho_envio_sem_aspas = caminho_envio.strip('"')
 
-                if tamanho_em_mb >= 63:
-                    msg = QMessageBox()
-                    msg.setIcon(QMessageBox.Warning)
-                    msg.setText(f"O arquivo selecionado tem {tamanho_em_mb:.2f} MB, que excede o limite de 63 MB.\nDeseja escolher outro arquivo?")
-                    msg.setWindowTitle("Confirmação")
-                    msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                    resposta = msg.exec_()
+                    # Obtém o tamanho do arquivo
+                    tamanho_em_bytes = os.path.getsize(caminho_envio_sem_aspas)
+                    tamanho_em_mb = tamanho_em_bytes / (1024 * 1024)  # Converte para MB
 
-                    if resposta == QMessageBox.Yes:
-                        caminho_envio, _ = QFileDialog.getOpenFileName(None, "Selecione o arquivo de vídeo", "", "Vídeos (*.mp4 *.avi *.mkv *.mov *.wmv)")
+                    if tamanho_em_mb >= 63:
+                        msg = QMessageBox()
+                        msg.setIcon(QMessageBox.Warning)
+                        msg.setText(f"O arquivo selecionado tem {tamanho_em_mb:.2f} MB, que excede o limite de 63 MB.\nDeseja escolher outro arquivo?")
+                        msg.setWindowTitle("Confirmação")
+                        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                        resposta = msg.exec_()
+
+                        if resposta == QMessageBox.Yes:
+                            caminho_envio, _ = QFileDialog.getOpenFileName(None, "Selecione o arquivo de vídeo", "", "Vídeos (*.mp4)")
+                        else:
+                            mostrar_opcoes()
+                            tamanho = True
                     else:
-                        mostrar_opcoes()
+                        # Caminho formatado para o Windows (barras invertidas)
+                        caminho_envio = f'"{caminho_envio}"'.replace("/", "\\")
                         tamanho = True
-                else:
-                    # Caminho formatado para o Windows (barras invertidas)
-                    caminho_envio = f'"{caminho_envio}"'.replace("/", "\\")
-                    tamanho = True
 
-    elif msg3.clickedButton() == btn_documentos:
+        elif msg4.clickedButton() == btn_documentos:
             caminho_operacao = f'../Ver/documentos.png'
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Information)
@@ -111,8 +115,84 @@ def mostrar_opcoes():
             caminho_envio, _ = QFileDialog.getOpenFileName(None, "Selecione o documento", "", "Documentos (*.pdf *.xlsx *.csv)")
             caminho_envio = f'"{caminho_envio}"'
             caminho_envio = caminho_envio.replace("/", "\\")
-    elif msg3.clickedButton() == btn_cancelar:
-        print("nao")
+        return "SemAcoplar"
+
+         
+    if msg3.clickedButton() == btn_acoplado:
+        msg4 = QMessageBox()
+        msg4.setIcon(QMessageBox.Question)
+        msg4.setWindowTitle("Confirmação")
+        msg4.setText("Qual o tipo de documento que deseja encaminhar")   
+        btn_imagens = msg4.addButton("Imagem", QMessageBox.ActionRole)
+        btn_videos = msg4.addButton("Vídeo", QMessageBox.ActionRole)
+        btn_documentos = msg4.addButton("Documento", QMessageBox.ActionRole)
+        msg4.exec_()
+        if msg4.clickedButton() == btn_imagens:
+            caminho_operacao = f'../Ver/fotovidio.png'
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Information)
+            msg.setWindowTitle("Procurar arquivo")
+            msg.setText("Escolha a imagem")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec_()
+            caminho_envio, _ = QFileDialog.getOpenFileName(None, "Selecione o arquivo de imagem", "", "Imagens (*.png *.jpg *.jpeg *.bmp)")
+            caminho_envio = f'"{caminho_envio}"'
+            caminho_envio = caminho_envio.replace("/", "\\")
+
+        elif msg4.clickedButton() == btn_videos:
+            caminho_operacao = f'../Ver/fotovidio.png'
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Information)
+            msg.setWindowTitle("Procurar arquivo")
+            msg.setText("Escolha um vídeo")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec_()
+            caminho_envio, _ = QFileDialog.getOpenFileName(None, "Selecione o arquivo de vídeo", "", "Vídeos (*.mp4)")
+
+            if caminho_envio:  # Verifica se um arquivo foi selecionado
+                tamanho = False
+                while not tamanho:
+                    # Remove aspas antes de calcular o tamanho
+                    caminho_envio_sem_aspas = caminho_envio.strip('"')
+
+                    # Obtém o tamanho do arquivo
+                    tamanho_em_bytes = os.path.getsize(caminho_envio_sem_aspas)
+                    tamanho_em_mb = tamanho_em_bytes / (1024 * 1024)  # Converte para MB
+
+                    if tamanho_em_mb >= 63:
+                        msg = QMessageBox()
+                        msg.setIcon(QMessageBox.Warning)
+                        msg.setText(f"O arquivo selecionado tem {tamanho_em_mb:.2f} MB, que excede o limite de 63 MB.\nDeseja escolher outro arquivo?")
+                        msg.setWindowTitle("Confirmação")
+                        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                        resposta = msg.exec_()
+
+                        if resposta == QMessageBox.Yes:
+                            caminho_envio, _ = QFileDialog.getOpenFileName(None, "Selecione o arquivo de vídeo", "", "Vídeos (*.mp4)")
+                        else:
+                            mostrar_opcoes()
+                            tamanho = True
+                    else:
+                        # Caminho formatado para o Windows (barras invertidas)
+                        caminho_envio = f'"{caminho_envio}"'.replace("/", "\\")
+                        tamanho = True
+
+        elif msg4.clickedButton() == btn_documentos:
+            caminho_operacao = f'../Ver/documentos.png'
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Information)
+            msg.setWindowTitle("Procurar arquivo")
+            msg.setText("Escolha o documento")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec_()
+            caminho_envio, _ = QFileDialog.getOpenFileName(None, "Selecione o documento", "", "Documentos (*.pdf *.xlsx *.csv)")
+            caminho_envio = f'"{caminho_envio}"'
+            caminho_envio = caminho_envio.replace("/", "\\")       
+        return "Acoplar"
+         
+
+         
+        
 # Chama a função
 
 
@@ -169,20 +249,297 @@ def Envio_Original_Texto2(Dados_Convidados_Envio):
     msg.setWindowTitle("Confirmação")
     msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
     resposta = msg.exec_()
-    if resposta == QMessageBox.No:
-        msg2 = QMessageBox()
-        msg2.setIcon(QMessageBox.Information)
-        msg2.setWindowTitle("Texto de envio")
-        msg2.setText("Por Favor digite o texto que deseja enviar")
-        msg2.setStandardButtons(QMessageBox.Ok)
-        msg2.exec_()
-        dialog = InputDialog()
-        if dialog.exec_() == QDialog.Accepted:
-                texto_digitado = dialog.get_text()
+    if mostrar_opcoes() == "SemAcoplar":
+        if resposta == QMessageBox.No:
+            msg2 = QMessageBox()
+            msg2.setIcon(QMessageBox.Information)
+            msg2.setWindowTitle("Texto de envio")
+            msg2.setText("Por Favor digite o texto que deseja enviar")
+            msg2.setStandardButtons(QMessageBox.Ok)
+            msg2.exec_()
+            dialog = InputDialog()
+            if dialog.exec_() == QDialog.Accepted:
+                    texto_digitado = dialog.get_text()
 
-        if texto_digitado:
+
+
+            if texto_digitado:
+
+
+
+                    caminho_fotoinico = f'../Ver/inicio.png'
+                    caminho_fotoerro = f'../Ver/erro.png'
+                    caminho_fotoseta = f'../Ver/seta.png'
+                    caminho_fotoplus = f'../Ver/plus.png'
+                    caminho_fotoevidioedoc = caminho_operacao
+                    caminho_fotopesquisa = f'../Ver/pesquisa.png'
+                    caminho_fotoabrir = f'../Ver/abrir.png'
+                    caminho_fotoseta2 = f'../Ver/seta2.png'
+                    pyperclip.copy(caminho_envio)
+
+                    msg4 = QMessageBox()
+                    msg4.setIcon(QMessageBox.Information)
+                    msg4.setWindowTitle("Confirmação")
+                    msg4.setText("Clique ok para iniciar o disparo")
+                    msg4.setStandardButtons(QMessageBox.Ok)
+                    msg4.exec_()
+
+
+
+            listatelefonicadeucerto= []
+            listatelefonicadeuerrado= []  
+    
+
+            nav = webdriver.Chrome()
+            nav.maximize_window()
+            nav.get("https://web.whatsapp.com/")
+
+            # Aguarda o usuário escanear o QR Code manualmente
+            aguardar(caminho_fotoinico, precisao=0.8, intervalo=2)
+            agrupado_telefone = Dados_Convidados_Envio.groupby('Telefone')
+            for telefone, grupo in agrupado_telefone:
+            # Extrair informações principais do grupo
+                 nomes = grupo['Nome Convidado'].unique()
+                 nomes_convidados = grupo['Nome Acompanhante'].tolist()
+                 texto_digitado_refatorado =  urllib.parse.quote(texto_digitado)
+                 listatelefonicadeucerto.append([telefone])             
+                 link = f"https://web.whatsapp.com/send?phone={telefone}&text={texto_digitado_refatorado}"    
+                # Navegar para o WhatsApp Web
+                 nav.get(link)
+                 time.sleep(10)  
+                 if erro_encontrar(caminho_fotoerro, precisao=0.8) == True:
+                        print("Imagem encontrada e clicada!")
+                        listatelefonicadeuerrado.append([telefone])             
+                 else:
+                # Usa OpenCV para localizar e clicar na imagem
+                   localizar_imagem_e_clicar(caminho_fotoseta, 0.8)
+                   time.sleep(4)
+                   localizar_imagem_e_clicar(caminho_fotoplus, 0.8)
+                   time.sleep(4)
+                   localizar_imagem_e_clicar(caminho_fotoevidioedoc, 0.8)
+                   time.sleep(4)
+                   localizar_imagem_e_clicar(caminho_fotopesquisa, 0.8)
+                   time.sleep(1)  
+                   pyautogui.hotkey("ctrl", "v")
+                   localizar_imagem_e_clicar(caminho_fotoabrir, 0.8)
+                   time.sleep(4)
+                   localizar_imagem_e_clicar(caminho_fotoseta2 , 0.8)
+                 time.sleep(5)
+            wb = Workbook()
+            planilha = wb.active  
+            planilha.append(["Telefones","Telefones Erros"])
+            # Preenche as colunas com as listas
+            for i in range(max(len(listatelefonicadeucerto), len(listatelefonicadeuerrado))):
+                linha = [
+                listatelefonicadeucerto[i][0] if i < len(listatelefonicadeucerto) else "",  # Evita IndexError
+                listatelefonicadeuerrado[i][0] if i < len(listatelefonicadeuerrado) else ""
+                ]
+                planilha.append(linha)
+# Sa    lva          a planilha
+            wb.save("dados.xlsx")
+            print("Arquivo Excel criado com sucesso!")
+
+        if resposta == QMessageBox.Yes:
+            msg2 = QMessageBox()
+            msg2.setIcon(QMessageBox.Information)
+            msg2.setWindowTitle("Texto de envio")
+            msg2.setText("Por Favor digite o texto que deseja enviar")
+            msg2.setStandardButtons(QMessageBox.Ok)
+            msg2.exec_()
+            dialog = InputDialog2()
+            if dialog.exec_() == QDialog.Accepted:
+                    texto_digitado = dialog.get_text()
+            if texto_digitado:
+                               # Exibe uma mensagem de confirmação
                 
-                mostrar_opcoes()
+                    caminho_fotoinico = f'../Ver/inicio.png'
+                    caminho_fotoerro = f'../Ver/erro.png'
+                    caminho_fotoseta = f'../Ver/seta.png'
+                    caminho_fotoplus = f'../Ver/plus.png'
+                    caminho_fotoevidioedoc = caminho_operacao
+                    caminho_fotopesquisa = f'../Ver/pesquisa.png'
+                    caminho_fotoabrir = f'../Ver/abrir.png'
+                    caminho_fotoseta2 = f'../Ver/seta2.png'
+                    pyperclip.copy(caminho_envio)
+                    msg4 = QMessageBox()
+                    msg4.setIcon(QMessageBox.Information)
+                    msg4.setWindowTitle("Confirmação")
+                    msg4.setText("Clique ok para iniciar o disparo")
+                    msg4.setStandardButtons(QMessageBox.Ok)
+                    msg4.exec_()
+        # Ap               onto a iamgem, da seta de envio
+            listatelefonicadeucerto2= []
+            listatelefonicadeuerrado2= [] 
+            # Configuração do Selenium
+            nav = webdriver.Chrome()
+            nav.maximize_window()
+            nav.get("https://web.whatsapp.com/")
+            # Aguarda o usuário escanear o QR Code manualmente
+            aguardar(caminho_fotoinico, precisao=0.8, intervalo=2)
+            agrupado_telefone = Dados_Convidados_Envio.groupby('Telefone')
+            for telefone, grupo in agrupado_telefone:
+        # Ex                          trair informações principais do grupo
+                nomes = grupo['Nome Convidado'].dropna().unique()  # Remove valores nulos
+                nomes = [str(nome) for nome in nomes]  # Converte todos os valores para string
+                nome = ', '.join(nomes)  # Converte o array em string separada por vírgulas
+                nomes_convidados = grupo['Nome Acompanhante'].dropna().tolist() 
+        # Fo                    rmataif not nomes_convidados:  # Verifica se a lista está vazia
+                if not nomes_convidados:
+                     nomes_convidados_str =  "" 
+                elif len(nomes_convidados) == 1:
+                    nomes_convidados_str = nomes_convidados[0]
+                elif len(nomes_convidados) == 2:
+                    nomes_convidados_str = ' e '.join(nomes_convidados)
+                else:
+                    nomes_convidados_str = ', '.join(nomes_convidados[:-1]) + ' e ' + nomes_convidados[-1]
+                texto_sub = texto_digitado.replace("<<nomeconvidado>>", nome)
+                texto_sub = texto_sub.replace("<<nomeacompanhantes>>", nomes_convidados_str)
+                textoFormatado = urllib.parse.quote(texto_sub)
+                print(telefone)
+                listatelefonicadeucerto2.append([telefone])             
+                link = f"https://web.whatsapp.com/send?phone={telefone}&text={textoFormatado}"
+                nav.get(link)
+                time.sleep(10)  
+                if erro_encontrar(caminho_fotoerro, precisao=0.8) == True:
+                       print("Imagem encontrada e clicada!")
+                       listatelefonicadeuerrado2.append([telefone])             
+                else:
+                
+                  localizar_imagem_e_clicar(caminho_fotoseta, 0.8)
+                  time.sleep(4)
+                  localizar_imagem_e_clicar(caminho_fotoplus, 0.8)
+                  time.sleep(4)
+                  localizar_imagem_e_clicar(caminho_fotoevidioedoc, 0.8)
+                  time.sleep(4)
+                  localizar_imagem_e_clicar(caminho_fotopesquisa, 0.8)
+                  time.sleep(1)  
+                  pyautogui.hotkey("ctrl", "v")
+                  localizar_imagem_e_clicar(caminho_fotoabrir, 0.8)
+                  time.sleep(4)
+                  localizar_imagem_e_clicar(caminho_fotoseta2 , 0.8)
+                time.sleep(5)
+            wb = Workbook()
+            planilha = wb.active  
+            planilha.append(["Telefones","Telefones Erros"])
+            # Preenche as colunas com as listas
+            for i in range(max(len(listatelefonicadeucerto2), len(listatelefonicadeuerrado2))):
+                linha = [
+                listatelefonicadeucerto2[i][0] if i < len(listatelefonicadeucerto2) else "",  # Evita IndexError
+                listatelefonicadeuerrado2[i][0] if i < len(listatelefonicadeuerrado2) else ""
+                ]
+                planilha.append(linha)
+
+####################### Verific ar o Tipo de Envio True Or False
+####################### Verific ar o Tipo de Envio
+####################### Verific ar o Tipo de Envio
+####################### Verific ar o Tipo de Envio    
+# 
+#           
+#    
+    else:
+        if resposta == QMessageBox.No:
+            msg2 = QMessageBox()
+            msg2.setIcon(QMessageBox.Information)
+            msg2.setWindowTitle("Texto de envio")
+            msg2.setText("Por Favor digite o texto que deseja enviar")
+            msg2.setStandardButtons(QMessageBox.Ok)
+            msg2.exec_()
+            dialog = InputDialog()
+            if dialog.exec_() == QDialog.Accepted:
+                        texto_digitado = dialog.get_text()
+
+
+
+            if texto_digitado:
+
+                        caminho_fotoinico = f'../Ver/inicio.png'
+                        caminho_fotoerro = f'../Ver/erro.png'
+                        caminho_fotoseta = f'../Ver/seta.png'
+                        caminho_fotoplus = f'../Ver/plus.png'
+                        caminho_fotoevidioedoc = caminho_operacao
+                        caminho_fotopesquisa = f'../Ver/pesquisa.png'
+                        caminho_fotoabrir = f'../Ver/abrir.png'
+                        caminho_fotoseta2 = f'../Ver/seta2.png'
+                        caminho_textoacoplado = f'../Ver/textoacoplado.png'
+                        pyperclip.copy(caminho_envio)
+
+
+                        msg4 = QMessageBox()
+                        msg4.setIcon(QMessageBox.Information)
+                        msg4.setWindowTitle("Confirmação")
+                        msg4.setText("Clique ok para iniciar o disparo")
+                        msg4.setStandardButtons(QMessageBox.Ok)
+                        msg4.exec_()
+
+
+
+            listatelefonicadeucerto= []
+            listatelefonicadeuerrado= [] 
+            nav = webdriver.Chrome()
+            nav.maximize_window()
+            nav.get("https://web.whatsapp.com/")
+            # Aguarda o usuário escanear o QR Code manualmente
+            aguardar(caminho_fotoinico, precisao=0.8, intervalo=2)
+            agrupado_telefone = Dados_Convidados_Envio.groupby('Telefone')
+            for telefone, grupo in agrupado_telefone:
+            # Extrair informações principais do grupo
+                 nomes = grupo['Nome Convidado'].unique()
+                 nomes_convidados = grupo['Nome Acompanhante'].tolist()
+                 texto_digitado_refatorado =  texto_digitado.encode('utf-8').decode('utf-8')
+                 listatelefonicadeucerto.append([telefone])             
+                 link = f"https://web.whatsapp.com/send?phone={telefone}"    
+                # Navegar para o WhatsApp Web
+                 nav.get(link)
+                 time.sleep(10)  
+                 if erro_encontrar(caminho_fotoerro, precisao=0.8) == True:
+                        print("Imagem encontrada e clicada!")
+                        listatelefonicadeuerrado.append([telefone])             
+                 else:
+                # Usa OpenCV para localizar e clicar na imagem
+                   localizar_imagem_e_clicar(caminho_fotoseta, 0.8)
+                   time.sleep(4)
+                   localizar_imagem_e_clicar(caminho_fotoplus, 0.8)
+                   time.sleep(4)
+                   localizar_imagem_e_clicar(caminho_fotoevidioedoc, 0.8)
+                   time.sleep(4)
+                   localizar_imagem_e_clicar(caminho_fotopesquisa, 0.8)
+                   time.sleep(1)  
+                   pyautogui.hotkey("ctrl", "v")
+                   localizar_imagem_e_clicar(caminho_fotoabrir, 0.8)
+                   time.sleep(4)
+                   localizar_imagem_e_clicar(caminho_textoacoplado, 0.8)
+                   time.sleep(1)
+                   pyperclip.copy(texto_digitado_refatorado)
+                   pyautogui.hotkey("ctrl", "v")
+                   pyperclip.copy(caminho_envio)                 
+                   localizar_imagem_e_clicar(caminho_fotoseta2 , 0.8)
+                 time.sleep(3)
+            wb = Workbook()
+            planilha = wb.active  
+            planilha.append(["Telefones","Telefones Erros"])
+            # Preenche as colunas com as listas
+            for i in range(max(len(listatelefonicadeucerto), len(listatelefonicadeuerrado))):
+                linha = [
+                listatelefonicadeucerto[i][0] if i < len(listatelefonicadeucerto) else "",  # Evita IndexError
+                listatelefonicadeuerrado[i][0] if i < len(listatelefonicadeuerrado) else ""
+                ]
+                planilha.append(linha)
+# Salva              a planilha
+            wb.save("dados.xlsx")
+            print("Arquivo Excel criado com sucesso!")
+        if resposta == QMessageBox.Yes:
+            msg2 = QMessageBox()
+            msg2.setIcon(QMessageBox.Information)
+            msg2.setWindowTitle("Texto de envio")
+            msg2.setText("Por Favor digite o texto que deseja enviar")
+            msg2.setStandardButtons(QMessageBox.Ok)
+            msg2.exec_()
+            dialog = InputDialog2()
+            if dialog.exec_() == QDialog.Accepted:
+                    texto_digitado = dialog.get_text()
+            if texto_digitado:
+                           # Exibe uma mensagem de confirmação
+                
                 caminho_fotoinico = f'../Ver/inicio.png'
                 caminho_fotoerro = f'../Ver/erro.png'
                 caminho_fotoseta = f'../Ver/seta.png'
@@ -191,189 +548,98 @@ def Envio_Original_Texto2(Dados_Convidados_Envio):
                 caminho_fotopesquisa = f'../Ver/pesquisa.png'
                 caminho_fotoabrir = f'../Ver/abrir.png'
                 caminho_fotoseta2 = f'../Ver/seta2.png'
+                caminho_textoacoplado = f'../Ver/textoacoplado.png'
                 pyperclip.copy(caminho_envio)
-
-            # Exibe uma mensagem de confirmação
+        
+                       
                 msg4 = QMessageBox()
                 msg4.setIcon(QMessageBox.Information)
                 msg4.setWindowTitle("Confirmação")
                 msg4.setText("Clique ok para iniciar o disparo")
                 msg4.setStandardButtons(QMessageBox.Ok)
                 msg4.exec_()
-    
-       # Aponto a iamgem, da seta de envio
-       
-        listatelefonicadeucerto= []
-        listatelefonicadeuerrado= []  
-  
-        # Configuração do Selenium
-        nav = webdriver.Chrome()
-        nav.maximize_window()
-        nav.get("https://web.whatsapp.com/")
 
-        # Aguarda o usuário escanear o QR Code manualmente
-        aguardar(caminho_fotoinico, precisao=0.8, intervalo=2)
+    # Ap               onto a iamgem, da seta de envio
+            listatelefonicadeucerto2= []
+            listatelefonicadeuerrado2= [] 
 
-        agrupado_telefone = Dados_Convidados_Envio.groupby('Telefone')
+                       # Configuração do Selenium
+            nav = webdriver.Chrome()
+            nav.maximize_window()
+            nav.get("https://web.whatsapp.com/")
+            # Aguarda o usuário escanear o QR Code manualmente
+            aguardar(caminho_fotoinico, precisao=0.8, intervalo=2)
+            agrupado_telefone = Dados_Convidados_Envio.groupby('Telefone')
 
-        for telefone, grupo in agrupado_telefone:
-        # Extrair informações principais do grupo
-             nomes = grupo['Nome Convidado'].unique()
-             nomes_convidados = grupo['Nome Acompanhante'].tolist()
-
-             texto_digitado_refatorado =  urllib.parse.quote(texto_digitado)
-             listatelefonicadeucerto.append([telefone])             
-             link = f"https://web.whatsapp.com/send?phone={telefone}&text={texto_digitado_refatorado}"    
-            # Navegar para o WhatsApp Web
-             nav.get(link)
-             time.sleep(10)  
-             if erro_encontrar(caminho_fotoerro, precisao=0.8) == True:
-                    print("Imagem encontrada e clicada!")
-                    listatelefonicadeuerrado.append([telefone])             
-
-             else:
-            # Usa OpenCV para localizar e clicar na imagem
-               localizar_imagem_e_clicar(caminho_fotoseta, 0.8)
-               time.sleep(4)
-               localizar_imagem_e_clicar(caminho_fotoplus, 0.8)
-               time.sleep(4)
-               localizar_imagem_e_clicar(caminho_fotoevidioedoc, 0.8)
-               time.sleep(4)
-               localizar_imagem_e_clicar(caminho_fotopesquisa, 0.8)
-               time.sleep(1)  
-               pyautogui.hotkey("ctrl", "v")
-               localizar_imagem_e_clicar(caminho_fotoabrir, 0.8)
-               time.sleep(4)
-               localizar_imagem_e_clicar(caminho_fotoseta2 , 0.8)
-             time.sleep(5)
-        wb = Workbook()
-        planilha = wb.active  
-
-        planilha.append(["Telefones","Telefones Erros"])
-
-
-        # Preenche as colunas com as listas
-        for i in range(max(len(listatelefonicadeucerto), len(listatelefonicadeuerrado))):
-            linha = [
-            listatelefonicadeucerto[i][0] if i < len(listatelefonicadeucerto) else "",  # Evita IndexError
-            listatelefonicadeuerrado[i][0] if i < len(listatelefonicadeuerrado) else ""
-            ]
-            planilha.append(linha)
-
-# Salva a planilha
-        wb.save("dados.xlsx")
-        print("Arquivo Excel criado com sucesso!")
-
-    if resposta == QMessageBox.Yes:
-        msg2 = QMessageBox()
-        msg2.setIcon(QMessageBox.Information)
-        msg2.setWindowTitle("Texto de envio")
-        msg2.setText("Por Favor digite o texto que deseja enviar")
-        msg2.setStandardButtons(QMessageBox.Ok)
-        msg2.exec_()
-        dialog = InputDialog2()
-        if dialog.exec_() == QDialog.Accepted:
-                texto_digitado = dialog.get_text()
-
-        if texto_digitado:
-            # Exibe uma mensagem de confirmação
-                mostrar_opcoes()
-                caminho_fotoinico = f'../Ver/inicio.png'
-                caminho_fotoerro = f'../Ver/erro.png'
-                caminho_fotoseta = f'../Ver/seta.png'
-                caminho_fotoplus = f'../Ver/plus.png'
-                caminho_fotoevidioedoc = caminho_operacao
-                caminho_fotopesquisa = f'../Ver/pesquisa.png'
-                caminho_fotoabrir = f'../Ver/abrir.png'
-                caminho_fotoseta2 = f'../Ver/seta2.png'
-                pyperclip.copy(caminho_envio)
-
-            # Exibe uma mensagem de confirmação
-                msg4 = QMessageBox()
-                msg4.setIcon(QMessageBox.Information)
-                msg4.setWindowTitle("Confirmação")
-                msg4.setText("Clique ok para iniciar o disparo")
-                msg4.setStandardButtons(QMessageBox.Ok)
-                msg4.exec_()
-    
-    # Aponto a iamgem, da seta de envio
-        listatelefonicadeucerto2= []
-        listatelefonicadeuerrado2= [] 
-           
-        # Configuração do Selenium
-        nav = webdriver.Chrome()
-        nav.maximize_window()
-
-        nav.get("https://web.whatsapp.com/")
-
-        # Aguarda o usuário escanear o QR Code manualmente
-        aguardar(caminho_fotoinico, precisao=0.8, intervalo=2)
-
-        agrupado_telefone = Dados_Convidados_Envio.groupby('Telefone')
         
+            for telefone, grupo in agrupado_telefone:
+    # Ex               trair informações principais do grupo
+                            nomes = grupo['Nome Convidado'].dropna().unique()  # Remove valores nulos
+                            nomes = [str(nome) for nome in nomes]  # Converte todos os valores para string
+                            nome = ', '.join(nomes)  # Converte o array em string separada por vírgulas
 
-        for telefone, grupo in agrupado_telefone:
-    # Extrair informações principais do grupo
-             nomes = grupo['Nome Convidado'].dropna().unique()  # Remove valores nulos
-             nomes = [str(nome) for nome in nomes]  # Converte todos os valores para string
-             nome = ', '.join(nomes)  # Converte o array em string separada por vírgulas
+                            nomes_convidados = grupo['Nome Acompanhante'].dropna().tolist() 
+
+    # Fo               rmataif not nomes_convidados:  # Verifica se a lista está vazia
+                            if not nomes_convidados:
+                                 nomes_convidados_str =  "" 
+                            elif len(nomes_convidados) == 1:
+                                nomes_convidados_str = nomes_convidados[0]
+                            elif len(nomes_convidados) == 2:
+                                nomes_convidados_str = ' e '.join(nomes_convidados)
+                            else:
+                                nomes_convidados_str = ', '.join(nomes_convidados[:-1]) + ' e ' + nomes_convidados[-1]
+
+                            texto_sub = texto_digitado.replace("<<nomeconvidado>>", nome)
+                            texto_sub = texto_sub.replace("<<nomeacompanhantes>>", nomes_convidados_str)
+                            #texto para o formato URL caso precise
+                            #textoFormatado = urllib.parse.quote(texto_sub)
+                            textoFormatado = texto_sub.encode('utf-8').decode('utf-8')
         
-             nomes_convidados = grupo['Nome Acompanhante'].dropna().tolist() 
+                            print(telefone)
         
-    # Formataif not nomes_convidados:  # Verifica se a lista está vazia
-             if not nomes_convidados:
-                  nomes_convidados_str =  "" 
-             elif len(nomes_convidados) == 1:
-                 nomes_convidados_str = nomes_convidados[0]
-             elif len(nomes_convidados) == 2:
-                 nomes_convidados_str = ' e '.join(nomes_convidados)
-             else:
-                 nomes_convidados_str = ', '.join(nomes_convidados[:-1]) + ' e ' + nomes_convidados[-1]
-              
-             texto_sub = texto_digitado.replace("<<nomeconvidado>>", nome)
-             texto_sub = texto_sub.replace("<<nomeacompanhantes>>", nomes_convidados_str)
-             textoFormatado = urllib.parse.quote(texto_sub)
+                            listatelefonicadeucerto2.append([telefone])             
+                            link = f"https://web.whatsapp.com/send?phone={telefone}"
 
-             print(telefone)
-
-             listatelefonicadeucerto2.append([telefone])             
-             link = f"https://web.whatsapp.com/send?phone={telefone}&text={textoFormatado}"
-             
-             nav.get(link)
-             time.sleep(10)  
-             if erro_encontrar(caminho_fotoerro, precisao=0.8) == True:
-                    print("Imagem encontrada e clicada!")
-                    listatelefonicadeuerrado2.append([telefone])             
-
-             else:
-            # Usa OpenCV para localizar e clicar na imagem
-               localizar_imagem_e_clicar(caminho_fotoseta, 0.8)
-               time.sleep(4)
-               localizar_imagem_e_clicar(caminho_fotoplus, 0.8)
-               time.sleep(4)
-               localizar_imagem_e_clicar(caminho_fotoevidioedoc, 0.8)
-               time.sleep(4)
-               localizar_imagem_e_clicar(caminho_fotopesquisa, 0.8)
-               time.sleep(1)  
-               pyautogui.hotkey("ctrl", "v")
-               localizar_imagem_e_clicar(caminho_fotoabrir, 0.8)
-               time.sleep(4)
-               localizar_imagem_e_clicar(caminho_fotoseta2 , 0.8)
-             time.sleep(5)
-        wb = Workbook()
-        planilha = wb.active  
-
-        planilha.append(["Telefones","Telefones Erros"])
-
-
-        # Preenche as colunas com as listas
-        for i in range(max(len(listatelefonicadeucerto2), len(listatelefonicadeuerrado2))):
-            linha = [
-            listatelefonicadeucerto2[i][0] if i < len(listatelefonicadeucerto2) else "",  # Evita IndexError
-            listatelefonicadeuerrado2[i][0] if i < len(listatelefonicadeuerrado2) else ""
-            ]
-            planilha.append(linha)
-
+                            nav.get(link)
+                            time.sleep(10)  
+                            if erro_encontrar(caminho_fotoerro, precisao=0.8) == True:
+                                   print("Imagem encontrada e clicada!")
+                                   listatelefonicadeuerrado2.append([telefone])             
+        
+                            else:
+                           # Usa OpenCV para localizar e clicar na imagem
+                              localizar_imagem_e_clicar(caminho_fotoseta, 0.8)
+                              time.sleep(3)
+                              localizar_imagem_e_clicar(caminho_fotoplus, 0.8)
+                              time.sleep(3)
+                              localizar_imagem_e_clicar(caminho_fotoevidioedoc, 0.8)
+                              time.sleep(3)
+                              localizar_imagem_e_clicar(caminho_fotopesquisa, 0.8)
+                              time.sleep(1)  
+                              pyautogui.hotkey("ctrl", "v")
+                              localizar_imagem_e_clicar(caminho_fotoabrir, 0.8)
+                              time.sleep(4)
+                              localizar_imagem_e_clicar(caminho_textoacoplado, 0.8)
+                              pyperclip.copy(textoFormatado)
+                              pyautogui.hotkey("ctrl", "v")
+                              time.sleep(2)
+                              pyperclip.copy(caminho_envio)     
+                              localizar_imagem_e_clicar(caminho_fotoseta2 , 0.8)
+                            time.sleep(3)
+                            
+            wb = Workbook()
+            planilha = wb.active  
+            planilha.append(["Telefones","Telefones Erros"])
+            # Preenche as colunas com as listas
+            for i in range(max(len(listatelefonicadeucerto2), len(listatelefonicadeuerrado2))):
+                linha = [
+                listatelefonicadeucerto2[i][0] if i < len(listatelefonicadeucerto2) else "",  # Evita IndexError
+                listatelefonicadeuerrado2[i][0] if i < len(listatelefonicadeuerrado2) else ""
+                ]
+                planilha.append(linha)
+                     
+        
 # Salva a planilha
 
     data_atual = datetime.datetime.now()

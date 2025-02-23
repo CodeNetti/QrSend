@@ -148,6 +148,12 @@ def Carregar_Plano_De_Fundo(usuario):
             msg.setStandardButtons(QMessageBox.Ok)
             msg.exec_()
             caminho_fotofundo, _ = QFileDialog.getOpenFileName(None, "Selecione o arquivo de imagem", "", "Imagens (*.png *.jpg *.jpeg *.bmp)")
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Information)
+            msg.setWindowTitle("Procurar arquivo")
+            msg.setText("Selecione a pasta aonde deseja salvar os QR codes")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec_()
             caminho_pasta = QFileDialog.getExistingDirectory(None, "Selecione a pasta aonde deseja salvar os QR codes")
             Iterar_sobre_as_imagens(caminhoQrs,caminho_fotofundo,caminho_pasta)
             caminho_foto_fundo_final = f"{caminho_pasta}/qrcode_1.png"
