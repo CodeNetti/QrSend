@@ -18,7 +18,6 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import Select
 import pyautogui
-import requests
 import os
 from PyQt5.QtWidgets import QFileDialog, QMessageBox,QApplication, QLabel,QVBoxLayout,QDialog, QFileDialog, QMessageBox, QPushButton,QInputDialog
 from PyQt5.QtGui import QPixmap , QDesktopServices
@@ -79,9 +78,9 @@ def exibir_imagem(caminho_imagem):
     dialog.exec_()
 
 # Exemplo de uso da função
-def Iterar_sobre_as_imagens(PastaQrs, ImagemdeFundo, PastaQrsFundo):
+def Iterar_sobre_as_imagens_com_fundo(PastaQrs, ImagemdeFundo, PastaQrsFundo):
     # Definir o caminho da pasta onde os QR codes com fundo serão salvos
-    usuario = os.getlogin()
+    
     pasta_qrs_com_fundo = PastaQrsFundo
 
     # Limpar a pasta QrsComFundo antes de salvar novas imagens
@@ -129,6 +128,34 @@ def Iterar_sobre_as_imagens(PastaQrs, ImagemdeFundo, PastaQrsFundo):
             # Salvar a imagem resultante no novo caminho
             fundo_img.save(caminho_qrcode_salvar)
 
+def Iterar_sobre_as_imagens_sem_fundo(PastaQrs, PastaQrsFundo):
+    # Limpar a pasta de destino antes de salvar novas imagens
+    for arquivo in os.listdir(PastaQrsFundo):
+        caminho_arquivo = os.path.join(PastaQrsFundo, arquivo)
+        try:
+            if os.path.isfile(caminho_arquivo):
+                os.remove(caminho_arquivo)
+        except Exception as e:
+            print(f"Erro ao tentar excluir o arquivo {arquivo}: {e}")
+
+    # Iterar sobre os arquivos da pasta de QR codes
+    for arquivo in os.listdir(PastaQrs):
+        if arquivo.endswith(".png"):  # Verificar se o arquivo é uma imagem PNG
+            caminho_qrcode = os.path.join(PastaQrs, arquivo)
+            
+            # Abrir o QR code
+            qrcode_img = PILImage.open(caminho_qrcode).convert("RGBA")
+            
+            # Construir o caminho completo com o nome do arquivo e extensão
+            caminho_qrcode_salvar = os.path.join(PastaQrsFundo, arquivo)
+            
+            # Salvar a imagem resultante no novo caminho
+            qrcode_img.save(caminho_qrcode_salvar)
+
+
+
+
+
 
 def Carregar_Plano_De_Fundo(usuario):
     global caminho_pasta
@@ -148,14 +175,8 @@ def Carregar_Plano_De_Fundo(usuario):
             msg.setStandardButtons(QMessageBox.Ok)
             msg.exec_()
             caminho_fotofundo, _ = QFileDialog.getOpenFileName(None, "Selecione o arquivo de imagem", "", "Imagens (*.png *.jpg *.jpeg *.bmp)")
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Information)
-            msg.setWindowTitle("Procurar arquivo")
-            msg.setText("Selecione a pasta aonde deseja salvar os QR codes")
-            msg.setStandardButtons(QMessageBox.Ok)
-            msg.exec_()
             caminho_pasta = QFileDialog.getExistingDirectory(None, "Selecione a pasta aonde deseja salvar os QR codes")
-            Iterar_sobre_as_imagens(caminhoQrs,caminho_fotofundo,caminho_pasta)
+            Iterar_sobre_as_imagens_com_fundo(caminhoQrs,caminho_fotofundo,caminho_pasta)
             caminho_foto_fundo_final = f"{caminho_pasta}/qrcode_1.png"
             exibir_imagem(caminho_foto_fundo_final)
             msg = QMessageBox()
@@ -173,7 +194,7 @@ def Carregar_Plano_De_Fundo(usuario):
                 msg.setStandardButtons(QMessageBox.Ok)
                 msg.exec_()
                 caminho_fotofundo, _ = QFileDialog.getOpenFileName(None, "Selecione o arquivo de imagem", "", "Imagens (*.png *.jpg *.jpeg *.bmp)")
-                Iterar_sobre_as_imagens(caminhoQrs,caminho_fotofundo,caminho_pasta)
+                Iterar_sobre_as_imagens_com_fundo(caminhoQrs,caminho_fotofundo,caminho_pasta)
                 exibir_imagem(caminho_foto_fundo_final)
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Question)
@@ -181,6 +202,11 @@ def Carregar_Plano_De_Fundo(usuario):
                 msg.setWindowTitle("Confirmação")
                 msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
                 resposta_fundo = msg.exec_()
+    else:
+        caminho_pasta = QFileDialog.getExistingDirectory(None, "Selecione a pasta aonde deseja salvar os QR codes")
+        caminhoQrs = f"../Qrs/"
+        Iterar_sobre_as_imagens_sem_fundo(caminhoQrs,caminho_pasta)
+
 
             
 

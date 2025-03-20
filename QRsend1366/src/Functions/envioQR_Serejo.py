@@ -15,7 +15,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import Select
 from PyQt5.QtWidgets import QFileDialog, QMessageBox, QInputDialog, QTextEdit, QApplication, QDialog, QPushButton, QVBoxLayout
 import pyautogui
-import requests
+
 import os
 import datetime
 import pyperclip
@@ -30,7 +30,7 @@ class InputDialog2(QDialog):
         super().__init__(parent)
         self.setWindowTitle("Digitação")
         self.text_edit = QTextEdit()
-        self.text_edit.setPlaceholderText("Digite o Texto de Envio | <<nomeconvidado>> = Nome do Convidado | <<nomeacomphantes>> = Nome do acompanhantes")
+        self.text_edit.setPlaceholderText("Digite o Texto de Envio | <<nomeconvidado>> = Nome do Convidado | <<nomeacompanhantes>> = Nome do acompanhantes")
         self.setWindowIcon(QIcon(f'../Pictures/Logo.png'))
         self.submit_button = QPushButton('Pronto')
         self.submit_button.clicked.connect(self.accept)

@@ -38,7 +38,7 @@ class Janela(QMainWindow):
         parent_dir = os.path.dirname(base_dir)  # Volta uma pasta
 
         # Define o ícone da janela com caminho relativo
-        icon_path = os.path.join(parent_dir, 'Pictures', 'Logoico.ico')
+        icon_path = f"../Pictures/Logoico.ico"
         self.setWindowIcon(QIcon(icon_path))
 
         # Tamanho da janela
@@ -62,8 +62,7 @@ class Janela(QMainWindow):
         # Adiciona o logo no centro superior
         base_dir = os.path.dirname(os.path.abspath(__file__))
         parent_dir = os.path.dirname(base_dir)  # Volta uma pasta
-        logo_path = os.path.join(parent_dir, 'Pictures', 'Logo2.png')
-
+        logo_path = f"../Pictures/Logo2.png"
         self.logo = QLabel(self)
         pixmap = QPixmap(logo_path)
 
