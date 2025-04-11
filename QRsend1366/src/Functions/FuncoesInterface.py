@@ -27,6 +27,7 @@ from Functions.geradorQr import  criar_Planilha_Final, insere_Planilha_Final,abr
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QToolTip, QFileDialog, QMessageBox
 from Functions.TextoCru import  Envio_Original_Texto
 from Functions.TextoeOutros import  Envio_Original_Texto2
+from Functions.EnvioQrList import  Envio_Original_Texto3
 from Functions.CriarEvento   import  criar_Evento  
 from Functions.envioQR_Serejo import  Envio_Original
 
@@ -71,6 +72,10 @@ def Disparo_Texto_Serejo(self):
 #Disparo de textos e outros
 def Disparo_Texto_Serejo2(self):
         Envio_Original_Texto2(Selecionar_Planilha_QRs_Serejo())
+
+def Disparo_Texto_Serejo3(self):
+        Envio_Original_Texto3(Selecionar_Planilha_QRs_Serejo())
+
 
 
 def Disparo_Qrs_Serejo(self):

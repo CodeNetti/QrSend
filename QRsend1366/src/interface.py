@@ -16,7 +16,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import Select
-from Functions.FuncoesInterface import  Gerador_Planilha_Qr_lista_original, Disparo_Qrs_Serejo, Disparo_Texto_Serejo2, Disparo_Texto_Serejo,CriacaodeEventos
+from Functions.FuncoesInterface import  Gerador_Planilha_Qr_lista_original, Disparo_Qrs_Serejo, Disparo_Texto_Serejo2, Disparo_Texto_Serejo,CriacaodeEventos, Disparo_Texto_Serejo3
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QToolTip, QFileDialog , QMessageBox, QLabel, QDesktopWidget
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel ,QWidget, QVBoxLayout
@@ -278,6 +278,7 @@ class Interface2(QMainWindow):
         # Botões centralizados
         self.addButton("Envio de Textos", layout, Disparo_Texto_Serejo)
         self.addButton("Envio de Textos\nDocumentos e Imagens", layout, Disparo_Texto_Serejo2)
+        self.addButton("Envio Qr List", layout, Disparo_Texto_Serejo3)
 
         layout.addStretch()  # Espaço flexível após os botões
         self.centralWidget.setLayout(layout)
