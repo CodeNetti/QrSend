@@ -24,7 +24,7 @@ from selenium import webdriver
 import time
 import numpy as np
 import os
-from Functions.Funcoesdeclique import localizar_imagem_e_clicar, erro_encontrar, aguardar
+from Functions.Funcoesdeclique import localizar_imagem_e_clicar, erro_encontrar, aguardar, aguardar_e_clicar
 import pyperclip
 
 
@@ -232,18 +232,24 @@ def Envio_Original_Texto2(Dados_Convidados_Envio):
 
              else:
             # Usa OpenCV para localizar e clicar na imagem
-               localizar_imagem_e_clicar(caminho_fotoseta, 0.8)
+               print("VOU ENVIAR OTESTO DE INICIO")
+               aguardar_e_clicar(caminho_fotoseta, 0.8)
                time.sleep(4)
-               localizar_imagem_e_clicar(caminho_fotoplus, 0.8)
+               print("VOU CLICAR NO PLUS")
+               aguardar_e_clicar(caminho_fotoplus, 0.8)
                time.sleep(4)
-               localizar_imagem_e_clicar(caminho_fotoevidioedoc, 0.8)
+               print("VOU CLICAR NO DOC")
+               aguardar_e_clicar(caminho_fotoevidioedoc, 0.8)
                time.sleep(4)
-               localizar_imagem_e_clicar(caminho_fotopesquisa, 0.8)
+               print("VOU CLICAR NA BARRA DE PESQUISA")
+               aguardar_e_clicar(caminho_fotopesquisa, 0.8)
                time.sleep(1)  
                pyautogui.hotkey("ctrl", "v")
-               localizar_imagem_e_clicar(caminho_fotoabrir, 0.8)
+               print("VOU CLICAR NO ABRIR")
+               aguardar_e_clicar(caminho_fotoabrir, 0.8)
                time.sleep(4)
-               localizar_imagem_e_clicar(caminho_fotoseta2 , 0.8)
+               print("VOU CLICAR NO ENVIAR")
+               aguardar_e_clicar(caminho_fotoseta2 , precisao=0.8)
              time.sleep(5)
         wb = Workbook()
         planilha = wb.active  
@@ -346,18 +352,18 @@ def Envio_Original_Texto2(Dados_Convidados_Envio):
 
              else:
             # Usa OpenCV para localizar e clicar na imagem
-               localizar_imagem_e_clicar(caminho_fotoseta, 0.8)
+               aguardar_e_clicar(caminho_fotoseta, 0.8)
                time.sleep(4)
-               localizar_imagem_e_clicar(caminho_fotoplus, 0.8)
+               aguardar_e_clicar(caminho_fotoplus, 0.8)
                time.sleep(4)
-               localizar_imagem_e_clicar(caminho_fotoevidioedoc, 0.8)
+               aguardar_e_clicar(caminho_fotoevidioedoc, 0.8)
                time.sleep(4)
-               localizar_imagem_e_clicar(caminho_fotopesquisa, 0.8)
+               aguardar_e_clicar(caminho_fotopesquisa, 0.8)
                time.sleep(1)  
                pyautogui.hotkey("ctrl", "v")
-               localizar_imagem_e_clicar(caminho_fotoabrir, 0.8)
+               aguardar_e_clicar(caminho_fotoabrir, 0.8)
                time.sleep(4)
-               localizar_imagem_e_clicar(caminho_fotoseta2 , 0.8)
+               aguardar_e_clicar(caminho_fotoseta2 , 0.8)
              time.sleep(5)
         wb = Workbook()
         planilha = wb.active  
