@@ -113,3 +113,49 @@ def localizar_imagem_e_clicar(caminho_referencia, precisao=0.8):
     else:
         print("Imagem não encontrada!")
         return False
+    
+
+
+
+
+
+
+
+
+
+
+
+def aguardar_e_clicar(caminho_referencia, precisao=0.8, intervalo=1):
+    """
+    Aguarda até que a imagem especificada apareça na tela e realiza o clique.
+    
+    :param caminho_referencia: Caminho para a imagem de referência.
+    :param precisao: Precisão mínima para considerar a imagem encontrada.
+    :param intervalo: Intervalo entre tentativas de verificação.
+    :return: True se a imagem for localizada e clicada.
+    """
+    print("Aguardando a imagem aparecer na tela...")
+    
+    imagem_referencia = cv2.imread(caminho_referencia, cv2.IMREAD_GRAYSCALE)
+    if imagem_referencia is None:
+        print(f"Imagem de referência não encontrada no caminho: {caminho_referencia}")
+        return False
+
+    while True:
+        tela = pyautogui.screenshot()
+        tela_np = cv2.cvtColor(np.array(tela), cv2.COLOR_RGB2GRAY)
+
+        resultado = cv2.matchTemplate(tela_np, imagem_referencia, cv2.TM_CCOEFF_NORMED)
+        _, max_val, _, max_loc = cv2.minMaxLoc(resultado)
+
+        if max_val >= precisao:
+            print("Imagem localizada! Clicando...")
+            x, y = max_loc
+            largura, altura = imagem_referencia.shape[::-1]
+            centro_x, centro_y = x + largura // 2, y + altura // 2
+            pyautogui.moveTo(centro_x, centro_y, duration=0.3)
+            pyautogui.click()
+            return True
+        else:
+            print("Imagem ainda não encontrada. Tentando novamente...")
+            time.sleep(intervalo)
